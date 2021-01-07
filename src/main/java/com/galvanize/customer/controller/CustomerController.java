@@ -2,8 +2,10 @@ package com.galvanize.customer.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.galvanize.customer.model.Customer;
@@ -20,7 +22,9 @@ public class CustomerController {
 		
 	}
 	private List<Customer> getCustomerList(){
-
+		
+		customers = new ArrayList<>();
+		
         Customer customer1 = new Customer("Salvator","Di'Mario","510-555-7863","45 Carver Ave, Midland, TX 70134");
         customer1.setId("41acbb7a-ebc8-40b7-8281-70635e3466b8");
 
@@ -41,4 +45,14 @@ public class CustomerController {
 
         return customers;
     }
+	@GetMapping("/customer/{id}")
+	public Customer getCustomer(@PathVariable(name = "id") String id) {
+	    getCustomerList();
+	    Optional<Customer> customerOptional = customers.stream().filter(customer -> customer.getId().equals(id)).findAny();
+	    Customer customer = null;
+	    if(customerOptional.isPresent()){
+	        customer = customerOptional.get();
+	    }
+	    return customer;
+	}
 }
