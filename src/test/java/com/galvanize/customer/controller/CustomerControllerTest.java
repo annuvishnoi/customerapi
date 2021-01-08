@@ -86,7 +86,7 @@ public class CustomerControllerTest {
 	void addCustomer() throws Exception {
 		String newCustomerJson = createCustomerJsonString();
 		 
-	   
+	   //This some comment
 	   mockMVC.perform( MockMvcRequestBuilders
 			      .post("/customer")
 			      .content(newCustomerJson)
