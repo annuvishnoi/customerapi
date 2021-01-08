@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.galvanize.customer.model.Customer;
@@ -54,5 +58,13 @@ public class CustomerController {
 	        customer = customerOptional.get();
 	    }
 	    return customer;
+	}
+	
+	@PostMapping("/customer")
+	public ResponseEntity<Customer> getCustomer(@RequestBody Customer customer) {
+		customer.setId("1");
+		List<Customer> customers = getCustomerList();
+	    customers.add(customer);
+	    return new ResponseEntity<Customer>(customer, HttpStatus.CREATED);
 	}
 }

@@ -30,6 +30,7 @@ public class CustomerControllerTest {
 
     String customersJsonPath = "src/test/java/data/customers.json"; // 4 customers
     String customerJsonPath = "src/test/java/data/existingCustomer.json"; // 1 customer
+    String newCustomerJsonPath = "src/test/java/data/newCustomer.json"; // 1 customer
     
 	@Autowired
 	private MockMvc mockMVC;
@@ -52,6 +53,13 @@ public class CustomerControllerTest {
         Customer customer = mapper.readValue(customerFile, Customer.class);
         return mapper.writeValueAsString(customer);
     }
+    private String createCustomerJsonString() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        File customerFile = new File(newCustomerJsonPath);
+        Customer customer = mapper.readValue(customerFile, Customer.class);
+        return mapper.writeValueAsString(customer);
+    }
+    
 	@Test
 	void getCustomers() throws Exception {
 		String expectedCustomerJson = mapper.writeValueAsString(customerList);
@@ -72,5 +80,19 @@ public class CustomerControllerTest {
 	         .andExpect(status().isOk())
 	         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 	         .andExpect(MockMvcResultMatchers.content().json(expectedCustomerJson));
+	}
+	
+	@Test
+	void addCustomer() throws Exception {
+		String newCustomerJson = createCustomerJsonString();
+		 
+	   
+	   mockMVC.perform( MockMvcRequestBuilders
+			      .post("/customer")
+			      .content(newCustomerJson)
+			      .contentType(MediaType.APPLICATION_JSON)
+			      .accept(MediaType.APPLICATION_JSON))
+			      .andExpect(status().isCreated())
+			      .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists());
 	}
 }
